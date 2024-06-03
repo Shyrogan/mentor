@@ -51,6 +51,7 @@ const onSubmit = form.handleSubmit(async (credentials) => {
       <div class="flex flex-col space-y-2">
         <FormField v-slot="{ componentField }" name="email">
           <FormLabel>Adresse e-mail</FormLabel>
+          <FormMessage />
           <FormControl>
             <Input
               id="email"
@@ -62,6 +63,7 @@ const onSubmit = form.handleSubmit(async (credentials) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="password">
           <FormLabel>Mot de passe</FormLabel>
+          <FormMessage />
           <FormControl>
             <Input id="password" type="password" v-bind="componentField" />
           </FormControl>
