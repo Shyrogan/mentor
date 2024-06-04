@@ -2,6 +2,7 @@
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 import { z } from 'zod'
+import { useToast } from '~/components/ui/toast'
 import type { Database } from '~/lib/schema'
 
 definePageMeta({
@@ -22,8 +23,15 @@ const onSubmit = form.handleSubmit(async (credentials) => {
   const supabase = useSupabaseClient<Database>()
   const { error } = await supabase.auth.signInWithPassword(credentials)
   if (error) {
+    const toaster = useToast()
+    toaster.toast({
+      title: 'Une erreur est survenue !',
+      description: JSON.stringify({
+        code: error.code,
+        message: error.message,
+      }),
+    })
     return
-    /** TODO */
   }
   navigateTo('/')
 })
