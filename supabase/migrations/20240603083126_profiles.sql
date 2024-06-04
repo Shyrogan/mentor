@@ -11,8 +11,8 @@ create table profiles (
   about_me text default '',
   location geography(point),
   location_visibility access_level default 'public',
-  phone text not null default '',
-  phone_visiblity access_level not null default 'public',
+  phone_number text not null default '',
+  phone_number_visiblity access_level not null default 'public',
   email text not null default '',
   email_visibility access_level default 'public'
 );
