@@ -23,6 +23,7 @@
     "vee-validate": "^4.13.0",
     "vue": "^3.4.27",
     "vue-router": "^4.3.2",
+    "vue-sonner": "^1.1.2",
     "zod": "^3.23.8"
   },
   "packageManager": "pnpm@9.1.4+sha1.2432063d815cfa88fd9fef1d85a445e3f609851d",

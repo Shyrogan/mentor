@@ -12,7 +12,7 @@ create table profiles (
   location geography(point),
   location_visibility access_level default 'public',
   phone_number text not null default '',
-  phone_number_visiblity access_level not null default 'public',
+  phone_number_visibility access_level not null default 'public',
   email text not null default '',
   email_visibility access_level default 'public'
 );
@@ -40,3 +40,21 @@ $$ language plpgsql security definer;
 create trigger on_auth_user_updated
   after update on public.profiles
   for each row execute procedure public.profile_handle_update();
+
+create function public.profile_save_metadata()
+returns trigger as $$
+begin
+  insert into public.profiles (id, email, full_name, avatar_url)
+  values (
+    new.id,
+    new.email,
+    new.raw_user_meta_data->>'full_name',
+    new.raw_user_meta_data->>'avatar_url'
+  );
+  return new;
+end;
+$$ language plpgsql security definer;
+
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.profile_save_metadata();

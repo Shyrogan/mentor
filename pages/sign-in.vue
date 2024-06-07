@@ -80,11 +80,13 @@ const onSubmit = form.handleSubmit(async (credentials) => {
     </CardContent>
     <CardFooter class="flex-col space-y-2">
       <Button type="submit" class="w-full">Se connecter</Button>
-      <NuxtLink to="/sign-up">
-        <Button variant="link" class="whitespace-normal">
-          Vous n'utilisez pas ces réseaux sociaux et ne possédez pas de compte ? Inscrivez-vous !
-        </Button>
-      </NuxtLink>
+
+      <Button variant="link" class="whitespace-normal" as-child>
+        <NuxtLink to="/sign-up">
+          Vous n'utilisez pas ces réseaux sociaux et ne possédez pas de compte ? Inscrivez-vous
+          !</NuxtLink
+        >
+      </Button>
     </CardFooter>
   </form>
 </template>

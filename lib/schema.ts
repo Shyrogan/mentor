@@ -37,27 +37,51 @@ export type Database = {
       profiles: {
         Row: {
           about_me: string | null
-          avatar_url: string | null
-          full_name: string | null
+          avatar_url: string
+          created_at: string
+          email: string
+          email_visibility: Database["public"]["Enums"]["access_level"] | null
+          full_name: string
           id: string
           location: unknown | null
-          updated_at: string | null
+          location_visibility:
+            | Database["public"]["Enums"]["access_level"]
+            | null
+          phone_number: string
+          phone_number_visibility: Database["public"]["Enums"]["access_level"]
+          updated_at: string
         }
         Insert: {
           about_me?: string | null
-          avatar_url?: string | null
-          full_name?: string | null
+          avatar_url?: string
+          created_at?: string
+          email?: string
+          email_visibility?: Database["public"]["Enums"]["access_level"] | null
+          full_name?: string
           id: string
           location?: unknown | null
-          updated_at?: string | null
+          location_visibility?:
+            | Database["public"]["Enums"]["access_level"]
+            | null
+          phone_number?: string
+          phone_number_visibility?: Database["public"]["Enums"]["access_level"]
+          updated_at?: string
         }
         Update: {
           about_me?: string | null
-          avatar_url?: string | null
-          full_name?: string | null
+          avatar_url?: string
+          created_at?: string
+          email?: string
+          email_visibility?: Database["public"]["Enums"]["access_level"] | null
+          full_name?: string
           id?: string
           location?: unknown | null
-          updated_at?: string | null
+          location_visibility?:
+            | Database["public"]["Enums"]["access_level"]
+            | null
+          phone_number?: string
+          phone_number_visibility?: Database["public"]["Enums"]["access_level"]
+          updated_at?: string
         }
         Relationships: [
           {
@@ -77,7 +101,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      access_level: "public" | "private" | "mentored"
     }
     CompositeTypes: {
       [_ in never]: never
