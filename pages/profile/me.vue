@@ -12,16 +12,19 @@ definePageMeta({
 
 const supabase = useSupabaseClient<Database>()
 const user = useSupabaseUser()
-const { data: profile, refresh } = await useAsyncData('profile', async () => {
-  if (!user) return undefined
-  const result = await supabase
-    .from('profiles')
-    .select()
-    .eq('id', user.value?.id ?? '')
-    .single()
-  if (result.error) throw result.error
-  return result.data
-})
+const { data: profile, refresh } = await useAsyncData(
+  `profile/${user.value?.id ?? ''}`,
+  async () => {
+    if (!user) return undefined
+    const result = await supabase
+      .from('profiles')
+      .select()
+      .eq('id', user.value?.id ?? '')
+      .single()
+    if (result.error) throw result.error
+    return result.data
+  },
+)
 
 const formSchema = toTypedSchema(
   z.object({
@@ -91,7 +94,7 @@ watch(
       </AlertDescription>
     </Alert>
     <div class="space-y flex flex-row items-center space-x-4">
-      <ProfileAvatar v-if="profile" :profile="profile" size="base" />
+      <ProfileAvatar editable v-if="profile" :profile="profile" size="base" />
       <FormField v-slot="{ componentField }" name="full_name">
         <div class="flex w-full flex-col">
           <FormControl>

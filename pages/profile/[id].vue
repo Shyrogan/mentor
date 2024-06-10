@@ -20,23 +20,17 @@ const { data: profile } = await useAsyncData(`profile/${route.params.id}`, async
     <div class="space-y flex flex-row items-center space-x-4">
       <ProfileAvatar v-if="profile" :profile="profile" size="base" />
       <H1 class="w-full">{{ profile?.full_name }}</H1>
+      <Button variant="secondary">
+        <Icon name="lucide:message-circle-plus" class="mr-2 h-4 w-4" />
+        Démarrer une discussion
+      </Button>
     </div>
     <div class="flex flex-col space-y-2">
       <div class="flex flex-row items-center space-x-2">
         <Icon name="lucide:mail" class="h-6 w-6" />
-        <P class="w-full"> john.doe@gmail.com </P>
+        <P class="w-full px-2">{{ profile?.email }}</P>
       </div>
     </div>
-    <H3>À propos de moi</H3>
-    <P class="w-full">
-      {{ profile?.about_me || 'Pas de description défini pour le moment. Bientôt peut-être :)' }}
-    </P>
-    <P class="font-normal text-muted-foreground">
-      Aucune d'offre de mentorat proposé pour le moment.
-    </P>
-    <H3>Groupes de discussions</H3>
-    <P class="font-normal text-muted-foreground">
-      Aucune activité dans des groupes de discussion pour le moment.
-    </P>
+    <P>{{ profile?.about_me }}</P>
   </div>
 </template>
