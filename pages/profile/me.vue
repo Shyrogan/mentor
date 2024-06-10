@@ -105,7 +105,7 @@ watch(
       </FormField>
     </div>
     <div class="flex flex-col space-y-2">
-      <div class="flex flex-row items-center space-x-2">
+      <div class="ml-2 flex flex-row items-center space-x-2">
         <Icon name="lucide:mail" class="h-6 w-6" />
         <FormField v-slot="{ componentField }" name="email">
           <div class="flex w-full flex-col">
@@ -134,7 +134,7 @@ watch(
           </DropdownMenu>
         </FormField>
       </div>
-      <div class="flex flex-row items-center space-x-2">
+      <div class="ml-2 flex flex-row items-center space-x-2">
         <Icon name="lucide:phone" class="h-6 w-6" />
         <FormField v-slot="{ componentField }" name="phone_number">
           <div class="flex w-full flex-col">

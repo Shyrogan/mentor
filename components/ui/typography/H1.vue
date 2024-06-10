@@ -23,7 +23,9 @@ const modelValue = useVModel(props, 'modelValue', emits, {
 <template>
   <h1
     v-if="!editable"
-    :class="cn(props.class, 'scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl')"
+    :class="
+      cn(props.class, 'scroll-m-20 px-2 py-4 text-4xl font-extrabold tracking-tight lg:text-5xl')
+    "
   >
     <slot />
   </h1>

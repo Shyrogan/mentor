@@ -27,7 +27,10 @@ function onValueChange(e: KeyboardEvent) {
 </script>
 
 <template>
-  <p v-if="!editable" :class="cn('font-medium leading-7', props.class)">
+  <p
+    v-if="!editable"
+    :class="cn('px-2 py-1.5 font-medium leading-7', multiline && 'whitespace-pre', props.class)"
+  >
     <slot />
   </p>
   <p

@@ -26,11 +26,15 @@ const { data: profile } = await useAsyncData(`profile/${route.params.id}`, async
       </Button>
     </div>
     <div class="flex flex-col space-y-2">
-      <div class="flex flex-row items-center space-x-2">
-        <Icon name="lucide:mail" class="h-6 w-6" />
-        <P class="w-full px-2">{{ profile?.email }}</P>
+      <div class="ml-2 flex flex-row items-center space-x-2">
+        <Icon name="lucide:mail" class="h-5 w-5" />
+        <P class="w-full">{{ profile?.email }}</P>
+      </div>
+      <div class="ml-2 flex h-10 flex-row items-center space-x-2">
+        <Icon name="lucide:phone" class="h-5 w-5" />
+        <P class="w-full">{{ profile?.phone_number }}</P>
       </div>
     </div>
-    <P>{{ profile?.about_me }}</P>
+    <P class="w-full" multiline>{{ profile?.about_me }}</P>
   </div>
 </template>

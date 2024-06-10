@@ -43,7 +43,7 @@ const onSubmit = form.handleSubmit(async (credentials) => {
     })
     return
   }
-  navigateTo('/')
+  navigateTo('/profile/me')
 })
 </script>
 

@@ -17,7 +17,7 @@ const { data: profile } = await useAsyncData('profile', async () => {
 
 <template>
   <nav class="flex w-screen flex-row items-center justify-between px-10 py-5 align-middle">
-    <NuxtLink to="/">
+    <NuxtLink to="/" class="w-64">
       <Logo class="h-10" />
     </NuxtLink>
     <NavbarMenu class="space-x-2">
@@ -37,33 +37,41 @@ const { data: profile } = await useAsyncData('profile', async () => {
         </div>
       </NavbarMenuItem>
     </NavbarMenu>
-    <Button v-if="!user || !profile" as-child>
-      <NuxtLink to="/sign-in">
-        <Icon name="lucide:scan-face" class="mr-2 h-6 w-6" /> Rejoindre la communauté
-      </NuxtLink>
-    </Button>
-    <DropdownMenu v-else>
-      <DropdownMenuTrigger as-child>
-        <Button v-if="profile" variant="ghost">
-          <ProfileAvatar :profile="profile" class="mr-2" size="xs" />
-          {{ profile.full_name }}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent class="w-48">
-        <DropdownMenuGroup>
-          <DropdownMenuItem as-child>
-            <NuxtLink to="/profile/me">
-              <Icon name="lucide:user" class="mr-2" /> Mon profil
-            </NuxtLink>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem class="text-destructive" @click="supabase.auth.signOut()">
-            <Icon name="lucide:log-out" class="mr-2" /> Se déconnecter
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div class="flex w-64 flex-row space-x-2">
+      <Button v-if="user" variant="ghost" class="px-2">
+        <Icon name="lucide:bell" class="h-4 w-4" />
+      </Button>
+      <Button v-if="user" variant="ghost" class="px-2">
+        <Icon name="lucide:message-circle" class="h-4 w-4" />
+      </Button>
+      <Button v-if="!user || !profile" as-child>
+        <NuxtLink to="/sign-in">
+          <Icon name="lucide:scan-face" class="mr-2 h-6 w-6" /> Rejoindre la communauté
+        </NuxtLink>
+      </Button>
+      <DropdownMenu v-else>
+        <DropdownMenuTrigger as-child>
+          <Button v-if="profile" variant="ghost">
+            <ProfileAvatar :profile="profile" class="mr-2" size="xs" />
+            {{ profile.full_name }}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent class="w-48">
+          <DropdownMenuGroup>
+            <DropdownMenuItem as-child>
+              <NuxtLink to="/profile/me">
+                <Icon name="lucide:user" class="mr-2" /> Mon profil
+              </NuxtLink>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem class="text-destructive" @click="supabase.auth.signOut()">
+              <Icon name="lucide:log-out" class="mr-2" /> Se déconnecter
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   </nav>
 </template>
