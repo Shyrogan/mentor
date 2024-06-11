@@ -17,7 +17,7 @@ const { data: profile, refresh } = await useAsyncData(
   async () => {
     if (!user) return undefined
     const result = await supabase
-      .from('profiles')
+      .from('profile')
       .select()
       .eq('id', user.value?.id ?? '')
       .single()
@@ -60,7 +60,7 @@ watch(
         onClick: async () => {
           if (!(await form.validate())) return
           const { error } = await supabase
-            .from('profiles')
+            .from('profile')
             .upsert({
               id: profile.value!.id,
               ...form.values,

@@ -34,7 +34,7 @@ export type Database = {
   }
   public: {
     Tables: {
-      profiles: {
+      profile: {
         Row: {
           about_me: string | null
           avatar_url: string
@@ -89,6 +89,66 @@ export type Database = {
             columns: ["id"]
             isOneToOne: true
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      program: {
+        Row: {
+          created_at: string
+          default_phone_calls: number
+          default_visits: number
+          description: string | null
+          id: string
+          include_deplacement_cost: boolean
+          location: unknown | null
+          name: string
+          owner: string
+          price: number
+          subscription_frequency: unknown | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          default_phone_calls?: number
+          default_visits?: number
+          description?: string | null
+          id: string
+          include_deplacement_cost?: boolean
+          location?: unknown | null
+          name?: string
+          owner: string
+          price: number
+          subscription_frequency?: unknown | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          default_phone_calls?: number
+          default_visits?: number
+          description?: string | null
+          id?: string
+          include_deplacement_cost?: boolean
+          location?: unknown | null
+          name?: string
+          owner?: string
+          price?: number
+          subscription_frequency?: unknown | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "programs_owner_fkey"
+            columns: ["owner"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_programs_owner_fkey"
+            columns: ["owner"]
+            isOneToOne: false
+            referencedRelation: "profile"
             referencedColumns: ["id"]
           },
         ]

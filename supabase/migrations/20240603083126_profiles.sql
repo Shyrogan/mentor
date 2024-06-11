@@ -2,7 +2,7 @@ create extension if not exists postgis schema extensions;
 
 create type access_level as enum ('public', 'private', 'mentored');
 
-create table profiles (
+create table profile (
   id uuid references auth.users on delete cascade not null primary key,
   created_at timestamp with time zone not null default CURRENT_TIMESTAMP,
   updated_at timestamp with time zone not null default CURRENT_TIMESTAMP,
@@ -17,16 +17,16 @@ create table profiles (
   email_visibility access_level default 'public'
 );
 
-alter table profiles
+alter table profile
   enable row level security;
 
-create policy "Public profiles are viewable by everyone." on profiles
+create policy "Public profiles are viewable by everyone." on profile
   for select using (true);
 
-create policy "Users can insert their own profile." on profiles
+create policy "Users can insert their own profile." on profile
   for insert with check ((select auth.uid()) = id);
 
-create policy "Users can update own profile." on profiles
+create policy "Users can update own profile." on profile
   for update using ((select auth.uid()) = id);
 
 create function public.profile_handle_update()
@@ -38,13 +38,13 @@ end;
 $$ language plpgsql security definer;
 
 create trigger on_auth_user_updated
-  after update on public.profiles
+  after update on public.profile
   for each row execute procedure public.profile_handle_update();
 
 create function public.profile_save_metadata()
 returns trigger as $$
 begin
-  insert into public.profiles (id, email, full_name, avatar_url)
+  insert into public.profile (id, email, full_name, avatar_url)
   values (
     new.id,
     new.email,

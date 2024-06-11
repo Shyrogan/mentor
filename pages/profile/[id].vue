@@ -9,7 +9,7 @@ if (user.value && route.params.id === user.value.id) {
 }
 const { data: profile } = await useAsyncData(`profile/${route.params.id}`, async () => {
   if (!user) return undefined
-  const result = await supabase.from('profiles').select().eq('id', route.params.id).single()
+  const result = await supabase.from('profile').select().eq('id', route.params.id).single()
   if (result.error) throw result.error
   return result.data
 })
