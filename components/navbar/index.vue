@@ -6,7 +6,7 @@ const user = useSupabaseUser()
 const { data: profile } = await useAsyncData('profile', async () => {
   if (!user) return undefined
   const result = await supabase
-    .from('profiles')
+    .from('profile')
     .select()
     .eq('id', user.value?.id ?? '')
     .single()
@@ -23,10 +23,20 @@ const { data: profile } = await useAsyncData('profile', async () => {
     <NavbarMenu class="space-x-2">
       <NavbarMenuItem title="Programmes de mentorat">
         <div class="grid w-[42rem] grid-cols-2 p-4">
-          <NavbarMenuCard title="Consulter l'annuaire des offres" to="/program">
-            Vous êtes à la recherche d'un peu d'aide ? Vous souhaitez être mentoré ? L'annuaire vous
-            permez de trouver ce dont vous avez besoin
+          <NavbarMenuCard
+            icon="lucide:book-open-text"
+            title="Consulter le registre des programmes"
+            to="/program"
+          >
+            Vous êtes à la recherche d'un peu d'aide ? Vous souhaitez être mentoré ? Consultez notre
+            registre !
           </NavbarMenuCard>
+          <ProgramAlertDialogCreate>
+            <NavbarMenuCard icon="lucide:file-plus" title="Créer un programme de mentorat" to="#">
+              Vous souhaitez être apprendre aux autres en faisant de votre expérience une source de
+              revenue ? C'est ici que ça se passe !
+            </NavbarMenuCard>
+          </ProgramAlertDialogCreate>
         </div>
       </NavbarMenuItem>
       <NavbarMenuItem title="Groupes de discussion">

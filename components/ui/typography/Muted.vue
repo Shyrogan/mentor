@@ -21,17 +21,7 @@ const modelValue = useVModel(props, 'modelValue', emits, {
 </script>
 
 <template>
-  <h1 v-if="!editable" :class="cn(props.class, '')">
+  <p class="text-sm text-muted-foreground">
     <slot />
-  </h1>
-  <input
-    v-else
-    v-model="modelValue"
-    :class="
-      cn(
-        'rounded px-2 py-4 transition-colors hover:bg-accent focus:bg-accent focus:outline-none',
-        props.class,
-      )
-    "
-  />
+  </p>
 </template>

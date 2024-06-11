@@ -8,7 +8,7 @@ import type { Database } from '~/lib/schema'
 const supabase = useSupabaseClient<Database>()
 const props = withDefaults(
   defineProps<{
-    profile: Database['public']['Tables']['profiles']['Row']
+    profile: Database['public']['Tables']['profile']['Row']
     class?: HTMLAttributes['class']
     size?: AvatarVariants['size']
     shape?: AvatarVariants['shape']
@@ -47,14 +47,13 @@ async function handleUpload() {
       return
     }
     const { error } = await supabase
-      .from('profiles')
+      .from('profile')
       .upsert({ id: props.profile.id, avatar_url: storageFile.path })
     if (error) {
       console.error(error)
       return
     }
     refresh()
-    console.log('refreshing')
   }
 }
 
