@@ -23,7 +23,15 @@ const form = useForm({
 
 const onSubmit = form.handleSubmit(async (credentials) => {
   const supabase = useSupabaseClient<Database>()
-  const { error } = await supabase.auth.signUp(credentials)
+  const { error } = await supabase.auth.signUp({
+    ...credentials,
+    options: {
+      data: {
+        full_name: `${credentials.firstName} ${credentials.lastName}`,
+        avatar_url: '',
+      },
+    },
+  })
   if (error) {
     const toaster = useToast()
     toaster.toast({
@@ -35,7 +43,7 @@ const onSubmit = form.handleSubmit(async (credentials) => {
     })
     return
   }
-  navigateTo('/')
+  navigateTo('/profile/me')
 })
 </script>
 
@@ -85,11 +93,9 @@ const onSubmit = form.handleSubmit(async (credentials) => {
     </CardContent>
     <CardFooter class="flex-col space-y-2">
       <Button type="submit" class="w-full">S'inscrire</Button>
-      <NuxtLink to="/sign-in">
-        <Button variant="link" class="whitespace-normal">
-          J'ai changé d'avis et je souhaite me connecter
-        </Button>
-      </NuxtLink>
+      <Button variant="link" class="whitespace-normal" as-child>
+        <NuxtLink to="/sign-in">J'ai changé d'avis et je souhaite me connecter </NuxtLink>
+      </Button>
     </CardFooter>
   </form>
 </template>

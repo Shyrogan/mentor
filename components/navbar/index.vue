@@ -17,15 +17,15 @@ const { data: profile } = await useAsyncData('profile', async () => {
 
 <template>
   <nav class="flex w-screen flex-row items-center justify-between px-10 py-5 align-middle">
-    <NuxtLink to="/">
+    <NuxtLink to="/" class="w-64">
       <Logo class="h-10" />
     </NuxtLink>
     <NavbarMenu class="space-x-2">
       <NavbarMenuItem title="Programmes de mentorat">
-        <div class="grid w-[40rem] grid-cols-2 p-4">
-          <NavbarMenuCard title="Consulter l'annuaire des offres" to="/offer/list">
-            Vous êtes à la recherche d'un peu d'aide ? L'annuaire vous permez de trouver ce dont
-            vous avez besoin
+        <div class="grid w-[42rem] grid-cols-2 p-4">
+          <NavbarMenuCard title="Consulter l'annuaire des offres" to="/program">
+            Vous êtes à la recherche d'un peu d'aide ? Vous souhaitez être mentoré ? L'annuaire vous
+            permez de trouver ce dont vous avez besoin
           </NavbarMenuCard>
         </div>
       </NavbarMenuItem>
@@ -37,13 +37,19 @@ const { data: profile } = await useAsyncData('profile', async () => {
         </div>
       </NavbarMenuItem>
     </NavbarMenu>
-    <NuxtLink v-if="!user" to="/sign-in">
-      <Button>
-        <Icon name="lucide:scan-face" class="mr-2 h-6 w-6" /> Rejoindre la communauté
+    <div class="flex w-64 flex-row space-x-2">
+      <Button v-if="user" variant="ghost" class="px-2">
+        <Icon name="lucide:bell" class="h-4 w-4" />
       </Button>
-    </NuxtLink>
-    <NuxtLink v-else>
-      <DropdownMenu>
+      <Button v-if="user" variant="ghost" class="px-2">
+        <Icon name="lucide:message-circle" class="h-4 w-4" />
+      </Button>
+      <Button v-if="!user || !profile" as-child>
+        <NuxtLink to="/sign-in">
+          <Icon name="lucide:scan-face" class="mr-2 h-6 w-6" /> Rejoindre la communauté
+        </NuxtLink>
+      </Button>
+      <DropdownMenu v-else>
         <DropdownMenuTrigger as-child>
           <Button v-if="profile" variant="ghost">
             <ProfileAvatar :profile="profile" class="mr-2" size="xs" />
@@ -52,11 +58,11 @@ const { data: profile } = await useAsyncData('profile', async () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent class="w-48">
           <DropdownMenuGroup>
-            <NuxtLink to="/profile/me">
-              <DropdownMenuItem>
+            <DropdownMenuItem as-child>
+              <NuxtLink to="/profile/me">
                 <Icon name="lucide:user" class="mr-2" /> Mon profil
-              </DropdownMenuItem>
-            </NuxtLink>
+              </NuxtLink>
+            </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
@@ -66,6 +72,6 @@ const { data: profile } = await useAsyncData('profile', async () => {
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-    </NuxtLink>
+    </div>
   </nav>
 </template>
