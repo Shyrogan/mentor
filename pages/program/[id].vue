@@ -37,6 +37,10 @@ const formSchema = toTypedSchema(
     description: z.string().min(3, {
       message: 'Merci de reseigner un description à votre offre.',
     }),
+    location: z.object({
+      type: z.enum(['Point']),
+      coordinates: z.array(z.number()),
+    }),
   }),
 )
 const form = useForm({
@@ -58,13 +62,16 @@ watch(
         label: 'Enregister',
         onClick: async () => {
           if (!(await form.validate())) return
+          const { location, ...values } = form.values
           const { error } = await supabase
             .from('program')
             .upsert({
               id: program.value!.id,
               owner: program.value!.owner,
               price: program.value!.price,
-              ...form.values,
+              location:
+                location && `POINT(${location.coordinates![0]} ${location.coordinates![1]})`,
+              ...values,
             })
             .single()
           if (error) {
@@ -86,7 +93,7 @@ watch(
 
 <template>
   <form class="flex flex-col space-y-4">
-    <Alert>
+    <Alert v-if="canEdit">
       <Icon name="lucide:info" />
       <AlertTitle>Cette page est modifiable !</AlertTitle>
       <AlertDescription>
@@ -98,36 +105,27 @@ watch(
       <FormField v-slot="{ componentField }" name="name">
         <div class="flex w-full flex-col">
           <FormControl>
-            <H1 class="w-full" :editable="canEdit" v-bind="componentField" />
+            <H1 class="w-full" :editable="canEdit" v-bind="componentField">
+              {{ program?.name }}
+            </H1>
             <FormMessage />
           </FormControl>
         </div>
       </FormField>
     </div>
-    <!-- <div class="flex flex-col space-y-2">
+    <div class="flex flex-col space-y-2">
       <div class="ml-2 flex flex-row items-center space-x-2">
-        <Icon name="lucide:mail" class="h-6 w-6" />
-        <FormField v-slot="{ componentField }" name="email">
+        <Icon name="lucide:map-pinned" class="h-6 w-6" />
+        <FormField v-slot="{ componentField }" name="location">
           <div class="flex w-full flex-col">
             <FormControl>
-              <P class="w-full" v-bind="componentField" editable />
+              <MapInput map-class="w-full h-32" :editable="canEdit" v-bind="componentField" />
             </FormControl>
             <FormMessage />
           </div>
         </FormField>
       </div>
-      <div class="ml-2 flex flex-row items-center space-x-2">
-        <Icon name="lucide:phone" class="h-6 w-6" />
-        <FormField v-slot="{ componentField }" name="phone_number">
-          <div class="flex w-full flex-col">
-            <FormControl>
-              <P class="w-full" v-bind="componentField" editable />
-              <FormMessage />
-            </FormControl>
-          </div>
-        </FormField>
-      </div>
-    </div> -->
+    </div>
     <FormField v-slot="{ componentField }" name="description">
       <P class="w-full" :editable="canEdit" multiline v-bind="componentField">
         {{
@@ -135,5 +133,6 @@ watch(
         }}
       </P>
     </FormField>
+    <MapPin class="h-40 !rounded-lg" :center="form.values.location?.coordinates" />
   </form>
 </template>

@@ -23,7 +23,7 @@ const form = useForm({
 
 const onSubmit = form.handleSubmit(async (credentials) => {
   const supabase = useSupabaseClient<Database>()
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     ...credentials,
     options: {
       data: {
@@ -43,7 +43,7 @@ const onSubmit = form.handleSubmit(async (credentials) => {
     })
     return
   }
-  navigateTo('/profile/me')
+  navigateTo(`/profile/${data.user?.id}`)
 })
 </script>
 

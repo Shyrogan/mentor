@@ -69,7 +69,7 @@ const { data: profile } = await useAsyncData('profile', async () => {
         <DropdownMenuContent class="w-48">
           <DropdownMenuGroup>
             <DropdownMenuItem as-child>
-              <NuxtLink to="/profile/me">
+              <NuxtLink :to="`/profile/${user.id}`">
                 <Icon name="lucide:user" class="mr-2" /> Mon profil
               </NuxtLink>
             </DropdownMenuItem>

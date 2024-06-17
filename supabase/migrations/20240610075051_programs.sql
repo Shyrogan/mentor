@@ -1,6 +1,6 @@
 create table programs (
   id uuid on delete cascade not null primary key,
-  owner uuid references public.profiles on delete cascade not null,
+  owner uuid references public.profile on delete cascade not null,
   created_at timestamp with time zone not null default CURRENT_TIMESTAMP,
   updated_at timestamp with time zone not null default CURRENT_TIMESTAMP,
 
