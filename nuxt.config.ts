@@ -12,12 +12,11 @@ export default defineNuxtConfig({
     componentDir: './components/ui',
   },
   supabase: {
-    url: 'http://127.0.0.1:54321',
-    key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0',
+    url: process.env.SUPABASE_URL,
+    key: process.env.SUPABASE_KEY,
     redirect: false,
   },
   mapbox: {
-    accessToken:
-      'pk.eyJ1Ijoic3ZpYWwiLCJhIjoiY2xpOHRhMG5xMXZnODNmbzk5NTdkM3Z2diJ9._gBLFdMfjSLYdXewnJk7Sw',
+    accessToken: process.env.MAPBOX_KEY,
   },
 })

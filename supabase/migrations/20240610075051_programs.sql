@@ -1,5 +1,5 @@
-create table programs (
-  id uuid on delete cascade not null primary key,
+create table program (
+  id uuid default gen_random_uuid() primary key,
   owner uuid references public.profile on delete cascade not null,
   created_at timestamp with time zone not null default CURRENT_TIMESTAMP,
   updated_at timestamp with time zone not null default CURRENT_TIMESTAMP,
@@ -16,19 +16,19 @@ create table programs (
   default_visits int2 not null default 0 check (default_visits >= 0)
 );
 
-alter table programs
+alter table program
   enable row level security;
 
-create policy "Public services are viewable by everyone." on programs
+create policy "Public services are viewable by everyone." on program
   for select using (true);
 
-create policy "Users can create their own programs." on programs
+create policy "Users can create their own programs." on program
   for insert with check (auth.uid() = owner);
 
-create policy "Users can delete their own programs." on programs
+create policy "Users can delete their own programs." on program
   for delete using (auth.uid() = owner);
 
-create policy "Users can update own services." on programs
+create policy "Users can update own services." on program
   for update using (auth.uid() = owner);
 
 create function public.program_handle_update()
@@ -40,5 +40,5 @@ end;
 $$ language plpgsql security definer;
 
 create trigger on_program_updated
-  after update on public.programs
+  after update on public.program
   for each row execute procedure public.program_handle_update();
