@@ -9,6 +9,7 @@ definePageMeta({
   layout: 'auth',
 })
 
+const supabase = useSupabaseClient<Database>()
 const formSchema = toTypedSchema(
   z.object({
     email: z.string().email(),
@@ -20,8 +21,7 @@ const form = useForm({
 })
 
 const onSubmit = form.handleSubmit(async (credentials) => {
-  const supabase = useSupabaseClient<Database>()
-  const { error } = await supabase.auth.signInWithPassword(credentials)
+  const { data, error } = await supabase.auth.signInWithPassword(credentials)
   if (error) {
     const toaster = useToast()
     toaster.toast({
@@ -33,8 +33,26 @@ const onSubmit = form.handleSubmit(async (credentials) => {
     })
     return
   }
-  navigateTo('/')
+  navigateTo(`/profile/${data.user.id}`)
 })
+
+async function loginWithProvider(provider: 'google' | 'facebook') {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider,
+  })
+  if (error) {
+    const toaster = useToast()
+    toaster.toast({
+      title: 'Une erreur est survenue !',
+      description: JSON.stringify({
+        code: error.code,
+        message: error.message,
+      }),
+    })
+    return
+  }
+  navigateTo(data.url)
+}
 </script>
 
 <template>
@@ -48,10 +66,10 @@ const onSubmit = form.handleSubmit(async (credentials) => {
   <form @submit="onSubmit">
     <CardContent class="space-y-4">
       <div class="flex flex-col space-y-2">
-        <Button variant="outline" class="w-full">
+        <Button @click="loginWithProvider('facebook')" variant="outline" class="w-full">
           <Icon name="lucide:facebook" class="mr-2 h-4 w-4" /> Connexion avec Facebook
         </Button>
-        <Button variant="outline" class="w-full">
+        <Button @click="loginWithProvider('google')" variant="outline" class="w-full">
           <Icon name="uil:google" class="mr-2 h-4 w-4" /> Connexion avec Google
         </Button>
       </div>
