@@ -1,7 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt', 'nuxt-icon', '@nuxtjs/supabase', 'nuxt-mapbox'],
+  modules: [
+    '@nuxtjs/tailwindcss',
+    'shadcn-nuxt',
+    'nuxt-icon',
+    '@nuxtjs/supabase',
+    'nuxt-mapbox',
+    'nitro-cloudflare-dev',
+  ],
   app: {
     head: {
       title: 'Mentor',
@@ -18,5 +25,16 @@ export default defineNuxtConfig({
   },
   mapbox: {
     accessToken: process.env.MAPBOX_KEY,
+  },
+  vite: {
+    define: {
+      global: "globalThis",
+    },
+  },
+  nitro: {
+    preset: 'cloudflare-pages',
+    prerender: {
+      autoSubfolderIndex: false,
+    },
   },
 })
