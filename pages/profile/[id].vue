@@ -10,11 +10,22 @@ const route = useRoute()
 const supabase = useSupabaseClient<Database>()
 const user = useSupabaseUser()
 const { data: profile, refresh } = await useAsyncData(`profile/${route.params.id}`, async () => {
-  if (!user) return undefined
   const result = await supabase.from('profile').select().eq('id', route.params.id).single()
   if (result.error) throw result.error
+
   return result.data
 })
+const { data: location, error } = await useAsyncData(
+  `profile/location/${route.params.id}`,
+  async () => {
+    const result = await supabase.rpc('get_latitude_longitude', {
+      location: profile.value?.location,
+    })
+    if (result.error) throw result.error
+    return result.data
+  },
+  { watch: [profile] },
+)
 
 const formSchema = toTypedSchema(
   z.object({
@@ -25,8 +36,15 @@ const formSchema = toTypedSchema(
     email_visibility: z.enum(['public', 'private', 'mentored']),
     phone_number: z.string(),
     phone_number_visibility: z.enum(['public', 'private', 'mentored']),
+    location: z
+      .object({
+        type: z.enum(['Point']),
+        coordinates: z.array(z.number()),
+      })
+      .nullable(),
   }),
 )
+
 const form = useForm({
   validationSchema: formSchema,
   initialValues: {
@@ -35,6 +53,12 @@ const form = useForm({
     email_visibility: profile.value?.email_visibility ?? undefined,
     phone_number: profile.value?.phone_number ?? undefined,
     phone_number_visibility: profile.value?.phone_number_visibility ?? undefined,
+    location: location.value
+      ? {
+          type: 'Point',
+          coordinates: location.value,
+        }
+      : undefined,
   },
 })
 
@@ -53,11 +77,14 @@ watch(
         label: 'Enregister',
         onClick: async () => {
           if (!(await form.validate())) return
+          const { location, ...values } = form.values
           const { error } = await supabase
             .from('profile')
             .upsert({
               id: profile.value!.id,
-              ...form.values,
+              location:
+                location && `POINT(${location.coordinates![1]} ${location.coordinates![0]})`,
+              ...values,
             })
             .single()
           if (error) {
@@ -133,11 +160,23 @@ watch(
           <ProfileDropdownVisibility v-bind="componentField" />
         </FormField>
       </div>
+      <div class="ml-2 flex flex-row items-center space-x-2">
+        <Icon name="lucide:map-pinned" class="h-6 w-6" />
+        <FormField v-slot="{ componentField }" name="location">
+          <div class="flex w-full flex-col">
+            <FormControl>
+              <MapInput map-class="w-full h-32" :editable="canEdit" v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </div>
+        </FormField>
+      </div>
     </div>
     <FormField v-slot="{ componentField }" name="about_me">
       <P class="w-full" :editable="canEdit" multiline v-bind="componentField">
         {{ profile?.about_me || "Je n'ai pas encore défini de description." }}
       </P>
     </FormField>
+    <MapPin class="h-40 !rounded-lg" :center="form.values.location?.coordinates" />
   </form>
 </template>

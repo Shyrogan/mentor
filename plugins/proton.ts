@@ -39,6 +39,8 @@ export default defineNuxtPlugin({
             `https://photon.komoot.io/reverse?lon=${lon}&lat=${lat}`,
             {
               method: 'GET',
+              retry: 10,
+              retryDelay: 50, // ms
             },
           )
           const filteredFeatures = result.features
@@ -51,11 +53,13 @@ export default defineNuxtPlugin({
                 f.properties.country,
             )
             .map((f) => f as Feature<Point>)
+            .map(featureToName)
+            .filter((s) => s.length > 0)
           if (filteredFeatures.length === 0) {
             reject('not found')
           }
           const f = filteredFeatures.at(0)!
-          resolve(featureToName(f))
+          resolve(f)
         } catch (e: any) {
           reject(e)
         }

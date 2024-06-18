@@ -13,22 +13,29 @@ definePageMeta({
 const supabase = useSupabaseClient<Database>()
 const user = useSupabaseUser()
 const route = useRoute()
-const { data: program, refresh } = await useAsyncData(
+const { data: programWithLocation, refresh } = await useAsyncData(
   `program/${route.params.id ?? ''}`,
   async () => {
-    const result = await supabase
+    const program = await supabase
       .from('program')
       .select()
       .eq('id', route.params.id ?? '')
       .single()
-    if (result.error) throw result.error
-    return result.data
+    if (program.error) throw program.error
+
+    const location = await supabase.rpc('get_latitude_longitude', {
+      location: program.data.location,
+    })
+    if (location.error) throw program.error
+
+    return { program: program.data, location: location.data }
   },
 )
+const program = computed(() => programWithLocation.value?.program)
+const location = computed(() => programWithLocation.value?.location)
 const canEdit = computed(
   () => (program.value && user.value && program.value.owner === user.value.id) || false,
 )
-
 const formSchema = toTypedSchema(
   z.object({
     name: z.string().min(3, {
@@ -37,10 +44,12 @@ const formSchema = toTypedSchema(
     description: z.string().min(3, {
       message: 'Merci de reseigner un description à votre offre.',
     }),
-    location: z.object({
-      type: z.enum(['Point']),
-      coordinates: z.array(z.number()),
-    }),
+    location: z
+      .object({
+        type: z.enum(['Point']),
+        coordinates: z.array(z.number()),
+      })
+      .nullable(),
   }),
 )
 const form = useForm({
@@ -48,6 +57,12 @@ const form = useForm({
   initialValues: {
     name: program.value?.name,
     description: program.value?.description || undefined,
+    location: location.value
+      ? {
+          type: 'Point',
+          coordinates: location.value,
+        }
+      : undefined,
   },
 })
 
