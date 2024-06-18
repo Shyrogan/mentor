@@ -9,9 +9,6 @@ import type { Database } from '~/lib/schema'
 const route = useRoute()
 const supabase = useSupabaseClient<Database>()
 const user = useSupabaseUser()
-if (user.value && route.params.id === user.value.id) {
-  //navigateTo('/')
-}
 const { data: profile, refresh } = await useAsyncData(`profile/${route.params.id}`, async () => {
   if (!user) return undefined
   const result = await supabase.from('profile').select().eq('id', route.params.id).single()
@@ -91,7 +88,7 @@ watch(
       </AlertDescription>
     </Alert>
     <div class="space-y flex flex-row items-center space-x-4">
-      <ProfileAvatar editable v-if="profile" :profile="profile" size="base" />
+      <ProfileAvatar editable v-if="profile" :profile="profile" :refresh="refresh" size="base" />
       <FormField v-slot="{ componentField }" name="full_name">
         <div class="flex w-full flex-col">
           <FormControl>
@@ -117,22 +114,7 @@ watch(
           </div>
         </FormField>
         <FormField v-if="canEdit" v-slot="{ componentField }" name="email_visibility">
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Button variant="ghost">
-                <Icon name="lucide:eye" class="mr-2" />
-                Visibilité
-                <Icon name="lucide:chevron-down" class="ml-1" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuRadioGroup v-bind="componentField">
-                <DropdownMenuRadioItem value="public">Public</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="private">Privée</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="mentored">Mentorés uniquement</DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <ProfileDropdownVisibility v-bind="componentField" />
         </FormField>
       </div>
       <div class="ml-2 flex flex-row items-center space-x-2">
@@ -148,22 +130,7 @@ watch(
           </div>
         </FormField>
         <FormField v-if="canEdit" v-slot="{ componentField }" name="phone_number_visibility">
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Button variant="ghost">
-                <Icon name="lucide:eye" class="mr-2" />
-                Visibilité
-                <Icon name="lucide:chevron-down" class="ml-1" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuRadioGroup v-bind="componentField">
-                <DropdownMenuRadioItem value="public">Public</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="private">Privée</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="mentored">Mentorés uniquement</DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <ProfileDropdownVisibility v-bind="componentField" />
         </FormField>
       </div>
     </div>

@@ -13,6 +13,7 @@ const props = withDefaults(
     size?: AvatarVariants['size']
     shape?: AvatarVariants['shape']
     editable?: boolean
+    refresh?: () => Promise<void>
   }>(),
   {
     size: 'sm',
@@ -46,34 +47,35 @@ async function handleUpload() {
       console.error(storageError)
       return
     }
+    const { data } = supabase.storage.from('avatars').getPublicUrl(storageFile.path)
     const { error } = await supabase
       .from('profile')
-      .upsert({ id: props.profile.id, avatar_url: storageFile.path })
+      .upsert({ id: props.profile.id, avatar_url: data.publicUrl })
     if (error) {
       console.error(error)
       return
     }
-    refresh()
+    if (props.refresh) props.refresh()
   }
 }
-
-const { data: url, refresh } = useAsyncData(`profile/${props.profile.id}/avatar`, async () => {
-  if (props.profile.avatar_url.length == 0) return undefined
-
-  const { data } = await supabase.storage
-    .from('avatars')
-    .createSignedUrl(props.profile.avatar_url, 3600)
-  return data?.signedUrl
-})
 </script>
 
 <template>
-  <AvatarRoot
-    @click="editable && handleAvatarClick()"
-    :class="cn(avatarVariant({ size, shape }), props.class)"
-  >
-    <AvatarImage v-if="url" :src="url || ''"></AvatarImage>
-    <AvatarFallback>{{ shortName }}</AvatarFallback>
-  </AvatarRoot>
+  <TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger as-child>
+        <AvatarRoot
+          @click="editable && handleAvatarClick()"
+          :class="cn(avatarVariant({ size, shape }), props.class)"
+        >
+          <AvatarImage v-if="profile.avatar_url" :src="profile.avatar_url"></AvatarImage>
+          <AvatarFallback>{{ shortName }}</AvatarFallback>
+        </AvatarRoot>
+      </TooltipTrigger>
+      <TooltipContent v-if="editable" class="font-medium">
+        Vous souhaitez modifier votre photo de profile ? Cliquez dessus !
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
   <input v-if="editable" type="file" ref="fileInput" class="hidden" @change="handleUpload" />
 </template>

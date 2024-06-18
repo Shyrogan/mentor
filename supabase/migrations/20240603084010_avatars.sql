@@ -1,6 +1,6 @@
 -- Set up Storage!
-insert into storage.buckets (id, name)
-  values ('avatars', 'avatars');
+insert into storage.buckets (id, name, public)
+  values ('avatars', 'avatars', true);
 
 create policy "Avatar images are publicly accessible." on storage.objects
   for select

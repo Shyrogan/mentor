@@ -27,7 +27,8 @@ const {
   error: nameError,
   refresh: refreshName,
 } = useAsyncData(async () => {
-  if (!modelValue.value) return null
+  console.log('Map input: ', modelValue.value)
+  if (!modelValue.value) return ''
   return await findNameByCoordinates(
     modelValue.value.coordinates[0],
     modelValue.value.coordinates[1],

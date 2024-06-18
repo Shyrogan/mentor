@@ -85,7 +85,7 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "profiles_id_fkey"
+            foreignKeyName: "profile_id_fkey"
             columns: ["id"]
             isOneToOne: true
             referencedRelation: "users"
@@ -113,7 +113,7 @@ export type Database = {
           default_phone_calls?: number
           default_visits?: number
           description?: string | null
-          id: string
+          id?: string
           include_deplacement_cost?: boolean
           location?: unknown | null
           name?: string
@@ -138,14 +138,7 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "programs_owner_fkey"
-            columns: ["owner"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "public_programs_owner_fkey"
+            foreignKeyName: "program_owner_fkey"
             columns: ["owner"]
             isOneToOne: false
             referencedRelation: "profile"
@@ -158,7 +151,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_latitude_longitude: {
+        Args: {
+          location: unknown
+        }
+        Returns: number[]
+      }
     }
     Enums: {
       access_level: "public" | "private" | "mentored"

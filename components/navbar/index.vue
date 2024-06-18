@@ -3,7 +3,7 @@ import type { Database } from '~/lib/schema'
 
 const supabase = useSupabaseClient<Database>()
 const user = useSupabaseUser()
-const { data: profile } = await useAsyncData('profile', async () => {
+const { data: profile } = await useAsyncData(`profile/${user.value?.id}`, async () => {
   if (!user) return undefined
   const result = await supabase
     .from('profile')

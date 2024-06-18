@@ -70,7 +70,7 @@ watch(
               owner: program.value!.owner,
               price: program.value!.price,
               location:
-                location && `POINT(${location.coordinates![0]} ${location.coordinates![1]})`,
+                location && `POINT(${location.coordinates![1]} ${location.coordinates![0]})`,
               ...values,
             })
             .single()
