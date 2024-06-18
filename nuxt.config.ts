@@ -22,13 +22,17 @@ export default defineNuxtConfig({
     url: process.env.SUPABASE_URL,
     key: process.env.SUPABASE_KEY,
     redirect: false,
+    redirectOptions: {
+      login: '/sign-in',
+      callback: '/confirm',
+    },
   },
   mapbox: {
     accessToken: process.env.MAPBOX_KEY,
   },
   vite: {
     define: {
-      global: "globalThis",
+      global: 'globalThis',
     },
   },
   nitro: {

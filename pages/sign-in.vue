@@ -36,22 +36,24 @@ const onSubmit = form.handleSubmit(async (credentials) => {
   navigateTo(`/profile/${data.user.id}`)
 })
 
-async function loginWithProvider(provider: 'google' | 'facebook') {
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider,
-  })
-  if (error) {
-    const toaster = useToast()
-    toaster.toast({
-      title: 'Une erreur est survenue !',
-      description: JSON.stringify({
-        code: error.code,
-        message: error.message,
-      }),
+function loginWithProvider(provider: 'google' | 'facebook') {
+  return async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider,
     })
-    return
+    if (error) {
+      const toaster = useToast()
+      toaster.toast({
+        title: 'Une erreur est survenue !',
+        description: JSON.stringify({
+          code: error.code,
+          message: error.message,
+        }),
+      })
+      return
+    }
+    navigateTo(data.url)
   }
-  navigateTo(data.url)
 }
 </script>
 
