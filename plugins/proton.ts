@@ -39,7 +39,7 @@ export default defineNuxtPlugin({
             `https://photon.komoot.io/reverse?lon=${lon}&lat=${lat}`,
             {
               method: 'GET',
-              retry: 10,
+              retry: 3,
               retryDelay: 50, // ms
             },
           )

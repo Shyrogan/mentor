@@ -13,7 +13,7 @@ definePageMeta({
 const supabase = useSupabaseClient<Database>()
 const user = useSupabaseUser()
 const route = useRoute()
-const { data: programWithLocation, refresh } = await useAsyncData(
+const { data: program, refresh } = await useAsyncData(
   `program/${route.params.id ?? ''}`,
   async () => {
     const program = await supabase
@@ -22,17 +22,20 @@ const { data: programWithLocation, refresh } = await useAsyncData(
       .eq('id', route.params.id ?? '')
       .single()
     if (program.error) throw program.error
-
-    const location = await supabase.rpc('get_latitude_longitude', {
-      location: program.data.location,
-    })
-    if (location.error) throw program.error
-
-    return { program: program.data, location: location.data }
+    return program.data
   },
 )
-const program = computed(() => programWithLocation.value?.program)
-const location = computed(() => programWithLocation.value?.location)
+const { data: location } = await useAsyncData(
+  `program/location/${route.params.id ?? ''}`,
+  async () => {
+    const location = await supabase.rpc('get_latitude_longitude', {
+      location: program.value?.location,
+    })
+    if (location.error) throw location.error
+    return location.data
+  },
+  { watch: [program] },
+)
 const canEdit = computed(
   () => (program.value && user.value && program.value.owner === user.value.id) || false,
 )

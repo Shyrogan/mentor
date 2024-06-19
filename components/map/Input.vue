@@ -26,16 +26,12 @@ const {
   data: name,
   error: nameError,
   refresh: refreshName,
-} = useAsyncData(async () => {
+} = useAsyncData(`POINTNAME[${modelValue.value}]`, async () => {
   if (!modelValue.value) return ''
   return await findNameByCoordinates(
     modelValue.value.coordinates[0],
     modelValue.value.coordinates[1],
   )
-})
-
-watch(modelValue, () => {
-  refreshName()
 })
 
 const results = ref<FeatureCollection<Point>>()
@@ -66,6 +62,7 @@ async function research(input: string) {
               () => {
                 modelValue = feature.geometry
                 emits('update:modelValue', feature.geometry)
+                refreshName()
               }
             "
           >

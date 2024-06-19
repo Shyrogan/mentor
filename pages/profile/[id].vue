@@ -15,7 +15,7 @@ const { data: profile, refresh } = await useAsyncData(`profile/${route.params.id
 
   return result.data
 })
-const { data: location, error } = await useAsyncData(
+const { data: location } = await useAsyncData(
   `profile/location/${route.params.id}`,
   async () => {
     const result = await supabase.rpc('get_latitude_longitude', {
