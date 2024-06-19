@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod'
+import type { Position } from 'geojson'
 import { useForm } from 'vee-validate'
 import { z } from 'zod'
 import { sonner } from '~/components/ui/sonner'
@@ -177,6 +178,9 @@ watch(
         {{ profile?.about_me || "Je n'ai pas encore défini de description." }}
       </P>
     </FormField>
-    <MapPin class="h-40 !rounded-lg" :center="form.values.location?.coordinates" />
+    <MapPin
+      class="h-40 !rounded-lg"
+      :center="form.values.location?.coordinates || (location as Position)"
+    />
   </form>
 </template>
