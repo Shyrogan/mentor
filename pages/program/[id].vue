@@ -153,6 +153,7 @@ watch(
       </P>
     </FormField>
     <MapPin
+      :id="`program/map/${program?.id}`"
       class="h-40 !rounded-lg"
       :center="form.values.location?.coordinates || (location as Position)"
     />

@@ -4,6 +4,7 @@ import type { HTMLAttributes } from 'vue'
 import { cn } from '~/lib/utils'
 
 const props = defineProps<{
+  id: string
   class?: HTMLAttributes['class']
   center?: Position
 }>()
@@ -11,7 +12,7 @@ const props = defineProps<{
 
 <template>
   <MapboxMap
-    mapId="map-pin"
+    :mapId="id"
     v-if="center"
     :options="{
       center: center,
