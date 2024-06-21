@@ -13,7 +13,7 @@ export default defineNuxtConfig({
     head: {
       title: 'Mentor',
     },
-    keepalive: true,
+    keepalive: false,
   },
   shadcn: {
     prefix: '',
