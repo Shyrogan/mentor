@@ -26,7 +26,7 @@ const {
   data: name,
   error: nameError,
   refresh: refreshName,
-} = useAsyncData(`POINTNAME[${modelValue.value}]`, async () => {
+} = useAsyncData(`POINTNAME[${modelValue.value?.coordinates}]`, async () => {
   if (!modelValue.value) return ''
   return await findNameByCoordinates(
     modelValue.value.coordinates[0],
